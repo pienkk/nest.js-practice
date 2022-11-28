@@ -8,36 +8,35 @@ import {
   Post,
 } from '@nestjs/common';
 
-interface MovieData {
-  name: string;
-  stars: number;
-}
+import { Movie } from './entities/movies.entity';
+import { MoviesService } from './movies.service';
+
 @Controller('movies')
 export class MoviesController {
+  constructor(private readonly moviesService: MoviesService) {}
   @Get()
-  getAllMovies() {
-    return 'this return all movies';
+  getAllMovies(): Movie[] {
+    return this.moviesService.getAll();
   }
 
-  @Get('/:id')
-  getOne(@Param('id') movieId: string) {
-    return `This movie id : ${movieId}`;
+  @Get(':id')
+  getOne(@Param('id') movieId: string): Movie | boolean {
+    console.log(movieId);
+    return this.moviesService.getOne(movieId);
   }
 
   @Post()
-  create(@Body() movieData: MovieData) {
+  create(@Body() movieData: Movie) {
     console.log(movieData);
-    const name: string = movieData.name;
-    console.log(name);
-    return `Movie's create`;
+    return this.moviesService.create(movieData);
   }
 
-  @Delete('/:id')
-  remove(@Param('id') movieId: number) {
-    return `Delete movie id : ${movieId}`;
+  @Delete(':id')
+  remove(@Param('id') movieId: string) {
+    return this.moviesService.remove(movieId);
   }
 
-  @Patch('/:id')
+  @Patch(':id')
   patch(@Param('id') movieId: string, @Body() movieData) {
     return {
       movieId: movieId,
