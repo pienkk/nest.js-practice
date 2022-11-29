@@ -1,3 +1,4 @@
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import {
   ExpressAdapter,
@@ -13,6 +14,13 @@ async function bootstrap() {
       cors: true,
       logger: ['error', 'warn', 'log'],
     },
+  );
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
   );
   await app.listen(3000);
 }
